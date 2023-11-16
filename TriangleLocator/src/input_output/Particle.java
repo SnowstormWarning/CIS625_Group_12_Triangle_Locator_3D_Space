@@ -3,11 +3,13 @@ package input_output;
 public class Particle {
 	
 	private double x,y,z;
+	private int id;
 	
-	public Particle(double xValue, double yValue, double zValue) {
+	public Particle(double xValue, double yValue, double zValue, int id_number) {
 		x = xValue;
 		y = yValue;
 		z = zValue;
+		id = id_number;
 	}
 	
 	public double[] GetXYZValues() {

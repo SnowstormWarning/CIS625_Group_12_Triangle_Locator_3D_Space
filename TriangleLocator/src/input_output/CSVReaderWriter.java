@@ -70,6 +70,7 @@ public class CSVReaderWriter {
 			double x,y,z;
 			
 			//TODO Might Need to Parallelize this Loop.
+			int id = 0;
 			while((particleData = reader.readLine()) != null) {
 				particleCords = particleData.split(",");
 				System.out.println(particleData);
@@ -83,7 +84,8 @@ public class CSVReaderWriter {
 						throw new Exception("Input CSV File Ill Formatted, Data lines must contain position cordinates that fall within the dimensions of the rectangular volume described on the first line in the file.");
 
 					
-					particles.add(new Particle(x, y, z));
+					particles.add(new Particle(x, y, z, id));
+					id++;
 					
 				}
 				else {
