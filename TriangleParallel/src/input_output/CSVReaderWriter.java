@@ -54,12 +54,12 @@ public class CSVReaderWriter {
         String sizing = reader.readLine();
         String[] sizes = sizing.split(",");
 
-        double xLength,yLength,zLength;
+        float xLength,yLength,zLength;
 
         if(sizes.length == 3) {
-            xLength = Double.parseDouble(sizes[0]);
-            yLength = Double.parseDouble(sizes[1]);
-            zLength = Double.parseDouble(sizes[2]);
+            xLength = Float.parseFloat(sizes[0]);
+            yLength = Float.parseFloat(sizes[1]);
+            zLength = Float.parseFloat(sizes[2]);
         }
         else {
             throw new Exception("Input CSV File Ill Formatted, First line must be the dimensions of the rectangluar volume (ie \"500, 500, 500\"");
@@ -68,7 +68,7 @@ public class CSVReaderWriter {
         String particleData;
         Map<Integer, Particle> particles = new HashMap<>();
         String[] particleCords;
-        double x,y,z;
+        float x,y,z;
 
         //TODO Might Need to Parallelize this Loop.
         int id = 0;
@@ -77,9 +77,9 @@ public class CSVReaderWriter {
             System.out.println(particleData);
             if(particleCords.length == 3) {
 
-                x = Double.parseDouble(particleCords[0]);
-                y = Double.parseDouble(particleCords[1]);
-                z = Double.parseDouble(particleCords[2]);
+                x = Float.parseFloat(particleCords[0]);
+                y = Float.parseFloat(particleCords[1]);
+                z = Float.parseFloat(particleCords[2]);
                 System.out.println(xLength+","+yLength+","+zLength);
                 if(x < 0 || y < 0 || z < 0 || x > xLength || y > yLength || z > zLength)
                     throw new Exception("Input CSV File Ill Formatted, Data lines must contain position cordinates that fall within the dimensions of the rectangular volume described on the first line in the file.");

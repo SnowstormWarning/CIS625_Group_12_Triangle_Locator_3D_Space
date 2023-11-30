@@ -4,11 +4,11 @@ import java.util.Map;
 
 public class ParticleVolume {
 
-    private double xLength, yLength, zLength;
+    private float xLength, yLength, zLength;
     private Map<Integer, Particle> Particles;
     private long numberOfLines;
 
-    public ParticleVolume(double xVolumeLength, double yVolumeLength, double zVolumeLength, Map<Integer, Particle> ParticleList) {
+    public ParticleVolume(float xVolumeLength, float yVolumeLength, float zVolumeLength, Map<Integer, Particle> ParticleList) {
         xLength = xVolumeLength;
         yLength = yVolumeLength;
         zLength = zVolumeLength;

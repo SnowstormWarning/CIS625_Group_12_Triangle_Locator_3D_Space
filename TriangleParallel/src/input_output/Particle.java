@@ -2,10 +2,10 @@ package input_output;
 
 public class Particle {
 
-    private double x,y,z;
+    private float x,y,z;
     private int id;
 
-    public Particle(double xValue, double yValue, double zValue, int id_number) {
+    public Particle(float xValue, float yValue, float zValue, int id_number) {
         x = xValue;
         y = yValue;
         z = zValue;
@@ -16,15 +16,15 @@ public class Particle {
         return new double[] { x, y, z };
     }
 
-    public double GetX() {
+    public float GetX() {
         return x;
     }
 
-    public double GetY() {
+    public float GetY() {
         return y;
     }
 
-    public double GetZ() {
+    public float GetZ() {
         return z;
     }
 

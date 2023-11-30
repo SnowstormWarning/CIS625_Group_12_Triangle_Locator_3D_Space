@@ -53,7 +53,9 @@ public class TriangleLocator {
             System.out.println("Could not retrieve a task (aborted). Cause: " + e.getCause());
         }
 
+        allTriangles.iterate(triangle -> {
 
+        });
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
