@@ -19,7 +19,6 @@ public class TriangleLocator {
 
     private final int N_THREADS = 16;
     private final double MAX_DIST = 10;
-
     private CSVReaderWriter readerWriter;
 
     public TriangleLocator() throws ExecutionException, InterruptedException {
@@ -65,10 +64,14 @@ public class TriangleLocator {
         allTriangles.iterate(triangle -> {
 
         });
+        //TODO Gage: Added statement below. This sets the histogram value in the writer to whatever you made in here.
+        readerWriter.SetOutputHistogramValues(histogram);
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        new TriangleLocator();
+        TriangleLocator triangleLocator = new TriangleLocator();
+      //TODO Gage: Added statement below. This writes the file.
+        triangleLocator.readerWriter.WriteFile();
     }
 
 }
