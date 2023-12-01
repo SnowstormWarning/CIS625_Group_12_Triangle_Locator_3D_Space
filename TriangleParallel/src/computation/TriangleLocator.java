@@ -8,6 +8,7 @@ import parallel.Subtask;
 import util.AppendableLinkedList;
 import util.Combinations;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -26,10 +27,11 @@ public class TriangleLocator {
         ParticleVolume particleVolume = readerWriter.OpenFile();
 
         AppendableLinkedList<Triangle> allTriangles = new AppendableLinkedList<>();
+        int[] histogram = new int[(int)Math.ceil(MAX_DIST)];
 
         System.out.println("DEBUG: Creating thread and promise pools");
         ExecutorService threadPool = Executors.newFixedThreadPool(N_THREADS);
-        Future<AppendableLinkedList<Triangle>>[] promises = new Future[N_THREADS];
+        Future<Subtask.Result>[] promises = new Future[N_THREADS];
 
         System.out.println("DEBUG: Computing the combination constants");
         int numCombinations = Combinations.choose(particleVolume.GetNumberOfParticles(), 3);
@@ -45,13 +47,20 @@ public class TriangleLocator {
 
         System.out.println("DEBUG: Joining the subtasks");
         try {
-            for (Future<AppendableLinkedList<Triangle>> promise : promises) {
+            for (Future<Subtask.Result> promise : promises) {
                 System.out.println("DEBUG: Attempting to retrieve a subtask result");
-                allTriangles.append(promise.get());
+                Subtask.Result result = promise.get();
+                allTriangles.append(result.getTriangles());
+
+                for (int i = 0; i < histogram.length; i++) {
+                    histogram[i] += result.getHistogram()[i];
+                }
             }
         }catch (ExecutionException e){
             System.out.println("Could not retrieve a task (aborted). Cause: " + e.getCause());
         }
+
+        System.out.println(Arrays.toString(histogram));
 
         allTriangles.iterate(triangle -> {
 
