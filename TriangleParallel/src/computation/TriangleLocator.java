@@ -64,6 +64,7 @@ public class TriangleLocator {
         allTriangles.iterate(triangle -> {
 
         });
+        System.out.println("DEBUG: histogram.length ="+histogram.length);
         //TODO Gage: Added statement below. This sets the histogram value in the writer to whatever you made in here.
         readerWriter.SetOutputHistogramValues(histogram);
     }

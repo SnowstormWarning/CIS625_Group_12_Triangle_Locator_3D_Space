@@ -28,7 +28,7 @@ public class CSVReaderWriter {
         //Constructor
         inFileBrowser= new JFileChooser();
         inFilter = new FileNameExtensionFilter("CSV Files", "csv");
-        JFileChooser outFileBrowser = new JFileChooser();
+        outFileBrowser = new JFileChooser();
         outFileBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         inFileBrowser.setFileFilter(inFilter);
     }
