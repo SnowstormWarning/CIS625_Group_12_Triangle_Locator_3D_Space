@@ -45,7 +45,7 @@ public class Subtask implements Callable<Subtask.Result> {
 
     @Override
     public Result call() throws Exception {
-        AppendableLinkedList<Triangle> triangles = new AppendableLinkedList<>();
+        //AppendableLinkedList<Triangle> triangles = new AppendableLinkedList<>();
         int[] histogram = new int[(int)Math.ceil(maxDist)];
         for (int i = startIndex; i <= endIndex; i++) {
             // Compute the i-th combination of N choose 3 (N = # of particles)
@@ -70,8 +70,8 @@ public class Subtask implements Callable<Subtask.Result> {
             histogram[(int)d3]++;
 
             // Form and add the triangle created
-            triangles.add(new Triangle(p1,p2,p3));
+            //triangles.add(new Triangle(p1,p2,p3));
         }
-        return new Result(triangles, histogram);
+        return new Result(null, histogram);
     }
 }

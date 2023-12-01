@@ -18,14 +18,14 @@ import java.util.concurrent.Future;
 public class TriangleLocator {
 
     private final int N_THREADS = 16;
-    private final double MAX_DIST = 10;
+    private final double MAX_DIST = 1000;
     private CSVReaderWriter readerWriter;
 
     public TriangleLocator() throws ExecutionException, InterruptedException {
         readerWriter = new CSVReaderWriter();
         ParticleVolume particleVolume = readerWriter.OpenFile();
 
-        AppendableLinkedList<Triangle> allTriangles = new AppendableLinkedList<>();
+        //AppendableLinkedList<Triangle> allTriangles = new AppendableLinkedList<>();
         int[] histogram = new int[(int)Math.ceil(MAX_DIST)];
 
         System.out.println("DEBUG: Creating thread and promise pools");
@@ -49,7 +49,7 @@ public class TriangleLocator {
             for (Future<Subtask.Result> promise : promises) {
                 System.out.println("DEBUG: Attempting to retrieve a subtask result");
                 Subtask.Result result = promise.get();
-                allTriangles.append(result.getTriangles());
+                //allTriangles.append(result.getTriangles());
 
                 for (int i = 0; i < histogram.length; i++) {
                     histogram[i] += result.getHistogram()[i];
@@ -59,19 +59,19 @@ public class TriangleLocator {
             System.out.println("Could not retrieve a task (aborted). Cause: " + e.getCause());
         }
 
+        threadPool.shutdown();
+        System.out.println("DEBUG: Thread Pool shut down");
+
         System.out.println(Arrays.toString(histogram));
-
-        allTriangles.iterate(triangle -> {
-
-        });
-        System.out.println("DEBUG: histogram.length ="+histogram.length);
+        
+        System.out.println("DEBUG: histogram.length = " + histogram.length);
         //TODO Gage: Added statement below. This sets the histogram value in the writer to whatever you made in here.
         readerWriter.SetOutputHistogramValues(histogram);
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TriangleLocator triangleLocator = new TriangleLocator();
-      //TODO Gage: Added statement below. This writes the file.
+        //TODO Gage: Added statement below. This writes the file.
         triangleLocator.readerWriter.WriteFile();
     }
 

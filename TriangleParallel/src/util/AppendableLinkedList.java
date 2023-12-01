@@ -40,6 +40,7 @@ public class AppendableLinkedList<T> {
     }
 
     public void append(AppendableLinkedList<T> list){
+        if(list.head == null) return;
         if(head == null){
             head = list.head;
             tail = head;
