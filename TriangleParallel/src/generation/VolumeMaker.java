@@ -18,13 +18,14 @@ public class VolumeMaker {
         File dir;
         int n;
         GParticle[] particles;
-        JFileChooser fileBrowser = new JFileChooser();
-
-        System.out.println("Provide the folder you want the CSV to be in. \n");
-        fileBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int option = fileBrowser.showOpenDialog(null);
-        if (option != JFileChooser.APPROVE_OPTION) return;
-        dir = fileBrowser.getSelectedFile();
+//        JFileChooser fileBrowser = new JFileChooser();
+//
+//        System.out.println("Provide the folder you want the CSV to be in. \n");
+//        fileBrowser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+//        int option = fileBrowser.showOpenDialog(null);
+//        if (option != JFileChooser.APPROVE_OPTION) return;
+//        dir = fileBrowser.getSelectedFile();
+        dir = new File(".");
         System.out.println("Provide the name of the CSV to be made. ::");
         Scanner scanner = new Scanner(System.in);
         fileName = scanner.next();

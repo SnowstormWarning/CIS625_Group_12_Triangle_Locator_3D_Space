@@ -14,16 +14,12 @@ import java.util.concurrent.Callable;
 public class Subtask implements Callable<Subtask.Result> {
 
     public class Result {
-        private AppendableLinkedList<Triangle> triangles;
+        //private AppendableLinkedList<Triangle> triangles;
         private int[] histogram;
 
-        public Result(AppendableLinkedList<Triangle> triangles, int[] histogram) {
-            this.triangles = triangles;
+        public Result(int[] histogram) {
+            //this.triangles = triangles;
             this.histogram = histogram;
-        }
-
-        public AppendableLinkedList<Triangle> getTriangles() {
-            return triangles;
         }
 
         public int[] getHistogram() {
@@ -32,13 +28,13 @@ public class Subtask implements Callable<Subtask.Result> {
     }
 
     private ParticleVolume particleVolume;
-    private int startIndex, endIndex;
-    private double maxDist;
-    public Subtask(ParticleVolume particleVolume, int startIndex, int endIndex, double maxDist){
+    private long startIndex, endIndex;
+    private float maxDist;
+    public Subtask(ParticleVolume particleVolume, long startIndex, long endIndex, float maxDist){
         this.particleVolume = particleVolume;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
-        this.maxDist = maxDist;
+        this.maxDist = maxDist*maxDist;
 
         System.out.println("DEBUG: Subtask(" + startIndex + ", " + endIndex + ", " + maxDist + ") created");
     }
@@ -47,7 +43,8 @@ public class Subtask implements Callable<Subtask.Result> {
     public Result call() throws Exception {
         //AppendableLinkedList<Triangle> triangles = new AppendableLinkedList<>();
         int[] histogram = new int[(int)Math.ceil(maxDist)];
-        for (int i = startIndex; i <= endIndex; i++) {
+        System.out.println("Thread " + Thread.currentThread().getName() + " call");
+        for (long i = startIndex; i <= endIndex; i++) {
             // Compute the i-th combination of N choose 3 (N = # of particles)
             int[] ci = Combinations.getCombination(particleVolume.GetNumberOfParticles(), 3, i+1);
 
@@ -56,13 +53,18 @@ public class Subtask implements Callable<Subtask.Result> {
             Particle p2 = particleVolume.GetParticle(ci[1]-1);
             Particle p3 = particleVolume.GetParticle(ci[2]-1);
 
-            double d1 = DistanceMeasurement.distance(p1,p2);
-            double d2 = DistanceMeasurement.distance(p1,p3);
-            double d3 = DistanceMeasurement.distance(p2,p3);
+            float d1 = DistanceMeasurement.distanceSquared(p1,p2);
+            if(d1 > maxDist) continue;
 
-            // If the distance between any two particles is too large, move on
-            if(d1 > maxDist || d2 > maxDist || d3 > maxDist)
-                continue;
+            float d2 = DistanceMeasurement.distanceSquared(p1,p3);
+            if(d2 > maxDist) continue;
+
+            float d3 = DistanceMeasurement.distanceSquared(p2,p3);
+            if(d3 > maxDist) continue;
+
+            d1 = (float)Math.sqrt(d1);
+            d2 = (float)Math.sqrt(d2);
+            d3 = (float)Math.sqrt(d3);
 
             // Add to histogram
             histogram[(int)d1]++;
@@ -72,6 +74,6 @@ public class Subtask implements Callable<Subtask.Result> {
             // Form and add the triangle created
             //triangles.add(new Triangle(p1,p2,p3));
         }
-        return new Result(null, histogram);
+        return new Result(histogram);
     }
 }

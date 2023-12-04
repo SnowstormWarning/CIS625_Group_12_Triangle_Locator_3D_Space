@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TriangleParallelSerial:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TriangleParallelSerial_jar</output-path>
+    <root id="archive" name="TriangleParallelSerial.jar">
+      <element id="module-output" name="TriangleParallel" />
+    </root>
+  </artifact>
+</component>

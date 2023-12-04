@@ -9,8 +9,9 @@ public class Combinations {
      * @param x Index of combination desired
      * @return The x-th lexicographically ordered p-combination of {1,...,n}
      */
-    public static int[] getCombination(int n, int p, int x){
-        int i,r,k = 0;
+    public static int[] getCombination(int n, int p, long x){
+        int i = 0;
+        long r,k = 0;
         int[] c = new int[p];
         for(i=0;i<p-1;i++){
             c[i] = (i != 0) ? c[i-1] : 0;
@@ -21,7 +22,7 @@ public class Combinations {
             } while(k < x);
             k = k - r;
         }
-        c[p-1] = c[p-2] + x - k;
+        c[p-1] = (int)(c[p-2] + x - k);
 
         return c;
     }
@@ -32,7 +33,7 @@ public class Combinations {
      * @param k k in n choose k
      * @return n choose k
      */
-    public static int choose(int n, int k){
+    public static long choose(int n, int k){
         if(k == 0) return 1;
         return (n * choose(n-1, k-1)) / k;
     }

@@ -12,11 +12,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class CSVReaderWriter {
 	
 	private String outputFileName = "output";
-    private File inFile;
+    private File inFile = new File("./input.csv");
     private JFileChooser inFileBrowser;
     private FileNameExtensionFilter inFilter;
     private BufferedReader inReader;
-    private File outFile;
+    private File outFile = new File(".");
     private JFileChooser outFileBrowser;
     private FileNameExtensionFilter outFilter;
     private FileWriter outWriter;
@@ -54,6 +54,21 @@ public class CSVReaderWriter {
         return readVolume;
     }
 
+    public ParticleVolume OpenDefaultFile() {
+
+        //SOURCE (How Use File Explorer):: https://genuinecoder.com/how-to-open-file-explorer-in-java/
+        //SOURCE (JFileChooser Usage):: https://stackoverflow.com/questions/796743/how-do-i-add-a-file-browser-inside-my-java-application
+        //SOURCE (JFileChooser Filter):: https://stackoverflow.com/questions/15771949/how-do-i-make-jfilechooser-only-accept-txt
+
+        try {
+            ReadFile();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return readVolume;
+    }
+
     private void ReadFile() throws Exception {
         //SOURCE (FileReader By Line Reading):: https://www.digitalocean.com/community/tutorials/java-read-file-line-by-line
         inReader = new BufferedReader(new FileReader(inFile.getPath()));
@@ -81,13 +96,13 @@ public class CSVReaderWriter {
         int id = 0;
         while((particleData = inReader.readLine()) != null) {
             particleCords = particleData.split(",");
-            System.out.println(particleData);
+            //System.out.println(particleData);
             if(particleCords.length == 3) {
 
                 x = Float.parseFloat(particleCords[0]);
                 y = Float.parseFloat(particleCords[1]);
                 z = Float.parseFloat(particleCords[2]);
-                System.out.println(xLength+","+yLength+","+zLength);
+                //System.out.println(xLength+","+yLength+","+zLength);
                 if(x < 0 || y < 0 || z < 0 || x > xLength || y > yLength || z > zLength)
                     throw new Exception("Input CSV File Ill Formatted, Data lines must contain position cordinates that fall within the dimensions of the rectangular volume described on the first line in the file.");
 
@@ -159,6 +174,49 @@ public class CSVReaderWriter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} // end of catch
+    }//end of write file.
+
+    public void WriteDefaultFile() { //TODO: Writes to the given folder. The file name is always equal to this.outputFileName ("output").
+        System.out.println("Provide the folder you want the CSV to be in. \n");
+
+        //Writer Try loop to catch exceptions.
+        try {
+            //Writer targets the choosen folder .../output.csv
+            FileWriter writer = new FileWriter(outFile+"/"+outputFileName+".csv");
+
+            //Add column labels to csv file.
+            writer.append("Side Distance, Frequency\n");
+
+            // Foreach value in the outputHistogramValues
+            for(int i = 0; i < outputHistogramValues.length; i++) {
+
+                //Debug
+                System.out.println("Writing... "+i+","+outputHistogramValues[i]);
+
+                //Add the values to the file.
+                writer.append(i+","+outputHistogramValues[i]);
+
+                //If we are not at the end of the histogram values.
+                if(i != outputHistogramValues.length-1) {
+                    //Then we add a new line character for the next set of values
+                    writer.append("\n");
+                }
+
+                //Debug
+                System.out.println("Done. i="+i+" oHV.L="+outputHistogramValues.length);
+            }// end of for loop
+
+            //Close the writer.
+            writer.close();
+
+            //debug
+            System.out.println("Writer Closed");
+
+            //end of try, start of catch
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } // end of catch
     }//end of write file.
     
     public void SetOutputHistogramValues(int[] histogram) {

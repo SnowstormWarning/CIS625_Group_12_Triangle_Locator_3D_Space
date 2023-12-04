@@ -10,6 +10,7 @@ import util.Combinations;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,13 +18,15 @@ import java.util.concurrent.Future;
 
 public class TriangleLocator {
 
-    private final int N_THREADS = 16;
-    private final double MAX_DIST = 1000;
+    private static int N_THREADS;
+    private static float MAX_DIST;
     private CSVReaderWriter readerWriter;
 
     public TriangleLocator() throws ExecutionException, InterruptedException {
         readerWriter = new CSVReaderWriter();
-        ParticleVolume particleVolume = readerWriter.OpenFile();
+        ParticleVolume particleVolume = readerWriter.OpenDefaultFile();
+
+        long startTime = System.currentTimeMillis();
 
         //AppendableLinkedList<Triangle> allTriangles = new AppendableLinkedList<>();
         int[] histogram = new int[(int)Math.ceil(MAX_DIST)];
@@ -33,14 +36,14 @@ public class TriangleLocator {
         Future<Subtask.Result>[] promises = new Future[N_THREADS];
 
         System.out.println("DEBUG: Computing the combination constants");
-        int numCombinations = Combinations.choose(particleVolume.GetNumberOfParticles(), 3);
-        int partitionSize = numCombinations/N_THREADS;
+        long numCombinations = Combinations.choose(particleVolume.GetNumberOfParticles(), 3);
+        long partitionSize = numCombinations/N_THREADS;
 
         System.out.println("DEBUG: Creating the subtasks");
         for (int i = 0; i < N_THREADS; i++) {
             System.out.println("DEBUG: Creating subtask " + i);
-            int startIndex = i * partitionSize;
-            int endIndex = (i == N_THREADS-1) ? numCombinations-1 : (i+1) * partitionSize - 1;
+            long startIndex = i * partitionSize;
+            long endIndex = (i == N_THREADS-1) ? numCombinations-1 : (i+1) * partitionSize - 1;
             promises[i] = threadPool.submit(new Subtask(particleVolume, startIndex, endIndex, MAX_DIST));
         }
 
@@ -60,19 +63,25 @@ public class TriangleLocator {
         }
 
         threadPool.shutdown();
+
         System.out.println("DEBUG: Thread Pool shut down");
 
+        long totalTime = System.currentTimeMillis() - startTime;
+        System.out.println("Time Elapsed (ms): " + totalTime);
+
         System.out.println(Arrays.toString(histogram));
-        
+
         System.out.println("DEBUG: histogram.length = " + histogram.length);
         //TODO Gage: Added statement below. This sets the histogram value in the writer to whatever you made in here.
         readerWriter.SetOutputHistogramValues(histogram);
     }
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+        MAX_DIST = Float.parseFloat(args[0]);
+        N_THREADS = Integer.parseInt(args[1]);
         TriangleLocator triangleLocator = new TriangleLocator();
         //TODO Gage: Added statement below. This writes the file.
-        triangleLocator.readerWriter.WriteFile();
+        triangleLocator.readerWriter.WriteDefaultFile();
     }
 
 }
